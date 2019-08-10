@@ -1,0 +1,7 @@
+{ "user": "pablo.aliaga@ing.uchile.cl",
+
+    "blocked": ["http://anakena.dcc.uchile.cl:8989/secret/", "http://www.google.com", "http://www.dcc.uchile.cl"],
+    
+    "forbidden_words": [{"Lorem": "blah"}, {"ipsum": "blah"}, {"amet": "blah"}]
+    
+    }
