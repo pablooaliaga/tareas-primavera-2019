@@ -1,0 +1,88 @@
+* TLD -> Top Level Domain : .com -> comercial, .org -> organización, .net -> de red, etc..
+son los dominios de internet mas grandes.
+* DNS -> Domain Name System, servicio de traducción de nombre de dominio a IP.
+* DNS se basa en jerarquía de nameservers o servidores de nombres, son los que pueden
+responder queries DNS.
+* DNS tambien se puede usar para, Host aliasing, Mail aliasing, Distribución de carga
+entre servidores.
+* Corre sobre la capa de transporta, es una caja negra, el cliente, no interactúa
+"directamente",  solo manda una pregunta y espera uan respuesta.
+* Nameservers saben de la información completa de una sección de su dominio
+-> zona
+* Orden: RLD -> TLD -> SLD -> Subdomain (www, blog, forum, etc...)
+* 13 Root servers administrados por IANA (contienen direcciones de TLD)
+* IANA -> Internet Assigned Numbers Authority
+* Server autoritativos: dns servers que tienen los registros DNS de una
+organización. La mayoría de la U'es tienen el suyo propio (dcc.uchile.cl).
+* Además existen los servidores DNS locales (resolvers)
+* La idea es que cada server solo necesita saber quién es el responsable
+de los otros subdominios
+* Se dice que un server tiene autoridad sobre un nombre si lo tiene en su tabla
+de traducción.
+* Un server es responable de un nombre si tiene el nombre en su tabla o sabe quien lo tiene
+* Todos los servers conocen al menos un root server
+* Un root server conoce los servers encargados de los TLD
+* Name servers:
+    primario master: leen información de un archivo
+    secondario o slave: contactan a otro nameserver, ayudan.
+* DNS servers guardan info de hostnames e IPs y otros, en RESOURCE RECORDS(RR).
+* Cada respuesta DNS lleva uno o más RR.
+* RR -> (Name, Value, Type, TTL)
+* TTL -> Time to Live
+* Tipos de RR's:
+    -Type=A -> Name=hostname, Value=IP
+    -Type=NS -> Name=domain, Value=hostname (de un server aut. que puede responder por domain)
+    -Type=CNAME -> Value=nombre canónico de alias Name.
+    -Type=MX -> Value=nombre canónico del mail server Name. Usando MX, se puede usar el mismo
+        alias para web y mail.
+* Record SOA -> Start-of-authority, tipo especial de RR que debe estar en todos los nameservers.
+Muestra las carácteristicas básicas del dominio(hay uno por cada zona)
+    - Source host: nombre del server primario para la zona
+    - Contact E-mail: E-mail del encargados
+    - Refresh Time: Tiempo en que secundarios se acutalizan por cambios en el primario
+    - Expiration Time:  Tiempo en segundos en que la info. de la zona se borra de los servers secundarios.
+    - TTL: tiempo en que se puede guardar un cache en RR de este server.
+* Resolvers, los clientes los contactan con request, y él formula la consula DNS correspondiente.
+* El más clásico resolveres el 8.8.8.8
+* Servers DNS usan Anycast.
+* En internet se suele usar unicast (un destino->una dirección)
+* Anycast asocia una sola dirección a varios destinos.
+* Una sola dirección IP para muchos equipos lejanos geogr. y se escoge el más cercano.
+* Funcionamiento DNS:
+    -Se toma el nombre del dominio que se desea buscar.
+    -Se obtiene la parte más hacia la derecha de la dirección (cl),
+    -Se consulta a un root server
+    -El root entrega la dirección de un server que conozca .cl
+    -El server .cl conoce al server uchile y nos entrega la dirección
+    -Uchile conoce a dcc, el que, al recibir la query, nos responde con la IP final.
+    -Cada PC tiene rutina para resolver nombres, Unix es gethostbyname
+    -Ver listado de resolvers conocidos por mi sistema usar:
+        * nmcli dev show | grep DNS
+        * nm-tool | grep DNS
+    -DNS usa UDP generalmente. Se usa TCP cuando el tamaño de los paquetes supera los 512 bytes
+        en gral. para zone transfers.
+* Consultas DNS son recursivas o iterativas
+* Iterativas:
+    -El cliente esta a cargo de resolver sus consultas, cliente resolver (hace toda la pega)
+* Recursivas:
+    -Pone la carga en los nameservers(preguntan hasta entregar respuesta final)
+    -El server dns pide consultas iterativas al otro, sucesivamente.
+    -Son riesgosas pues dejan al server vulnerable a ataques
+* Cada dominio tiene más de un server asociado(por redundancia)
+* Solución: ordenar y siempre responder en orden.
+* Para ordenar se usa Round-Robin usando prioridad por RTT.
+* RTT -> Round Trip Time
+* Dos tipos de mensajes: query y reply. Mismo formato
+* Formato:
+    -Primeros 12 bytes header
+    -Contienen en una parte flags 1 bit relevantes
+        * query(0)/reply(1)
+        * autoritario
+        * consulta recursivas
+        * recursión disponible
+* DNS Caching, se hace caché de el resultado mismo de IP's o ciertos dominios
+o quien es autoritativo para ellos
+* Incluso caching negativo, de consultas por nombre inexistente.
+* En el caching igual se pueden guardar direcciones de TLD, lo que evita sobrecargar a los root.
+* Los registros se guardan por un cierto tiempo y luego se descartan.
+    -El admin de la zona decide un TTL para los registros cacheados.

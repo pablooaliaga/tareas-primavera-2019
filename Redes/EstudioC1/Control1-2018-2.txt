@@ -1,0 +1,42 @@
+P1.
+    1.  
+    
+* Desde un host, en un puerto, solo pueden salir sockets desde la misma app,
+pero pueden haber más de 1. 
+* Dos aplicaciones dentro de un mismo host no pueden usar
+el mismo puerto.
+* No se procesan las requests en el mismo socket.
+* Si se procesan en el mismo puerto.
+* Un socket es tupla([ip origen, puerto origen], [ip destino, puerto destino])
+* Para una conexión solo hay un socket.
+
+    2.
+
+* DNS -> Domain Name System
+* TTL -> Time to live
+* ¿Qué significa el TTL cuando la respuesta viene de un server autoritativo? 
+¿Y uno no autoritativo?
+* Un autoritativo -> asegura que la respuesta es conocida por el de primera mano
+* Un no autoritativo -> se tiene que ir actualizando,
+    --Respuesta--
+* Autoritativo, cuanto tiempo tiene la información guardada en caché
+* No autoritativo, cuanto tiempo la información que me llego del autoritativo es válido
+
+    3.
+
+* RTT -> Round Trip Time, lo que se demora en ir de ida y vuelta
+* Un servidor DNS, son varios servidores unidos distribuidores respondiendo 
+bajo la misma IP.
+* Servidores HTTP necesitan IP distintas.
+* Multiples servidores DNS pueden usar la misma IP. Anycast!
+* Anycast de por sí, responde por distancia.
+    --Respuesta--
+* Para aprovechar el DNS, decirse al DNS que resuelva varios IP's con el mismo dominio.
+* Una posible solución para no armar bottle necks va a ser pedirle al cliente que tenga 
+más conciencia de lo que estan haciendo. Decirle al cliente que vea todas las direcciones
+y decida donde ir: donde más le convenga.
+* Idea no wena, Proxy y que el redirija, pero es muy bottle neck asi que uwu.
+* Mejor solución, en vez de hacer un proxy, hacer como un servidor que responde al cliente,
+con una IP (de un listado de IP) de la dirección del servidor final que más le convenga al 
+cliente. No es un DNS en sí, pues para llegar a ese "proxy" se llega a un servidor HTTP final.
+Y luego el cliente tiene que redireccionarse al otro servidor.  
