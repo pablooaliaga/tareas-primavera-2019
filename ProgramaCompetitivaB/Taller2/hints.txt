@@ -1,0 +1,26 @@
+-- Problema C --
+* Ver si secuencia es A-secuencia
+* Hacer un arreglo A[1000], si A[i] es 1, significa que ese numero se puede alcanzar
+sumando los anteriores, así recorremos toda la secuencia y preguntamos, uwu.
+
+-- Problema D -- 
+Vector de numeros a[5]
+Ver permutaciones 9! es el maximo en competencia
+
+operaciones = {+,-,*}
+
+5! * 3^4 -> operaciones
+
+do{
+
+    --ACA CHECKEAR SI EXISTE OPERACION PARA ESA OPERACION DE NUMEROS--
+
+} while (next_permutation(a, a+5))
+
+-- Problema F--
+
+NO LO ENTENDI
+
+-- Problema E--
+Buscar caminos en mapa 
+

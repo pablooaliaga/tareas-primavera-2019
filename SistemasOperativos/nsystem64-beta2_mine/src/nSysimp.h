@@ -1,5 +1,6 @@
 #include <signal.h>
 
+
 /*************************************************************
  * nProcess.c
  *************************************************************/
@@ -25,12 +26,13 @@ typedef struct Task /* Descriptor de una tarea */
   struct Queue *send_queue; /* cola de emisores en espera de esta tarea */
   union { void *msg; int rc; } send; /* sirve para intercambio de info */
   int wake_time;            /* Tiempo maximo de espera de un nReceive */
-
-  /* Para nShare, nRequest y nRelease */
-  struct FifoQueue *waiting_msg_queue; 
-  char *message;
-  int timeout;
-  int listening;
+  
+  /* Para nShare, nRelease, nRequest */
+  struct FifoQueue *share_queue; /* cola de receptores en espera de esta tarea */
+  //void *share_send_msg; /* sirve para intercambiar info en share */
+  int n_request;
+  int request_time; /* Tiempo maximo de espera de un nRequest */
+  char *share_msg;
 }
   *nTask;
 
@@ -55,16 +57,17 @@ typedef struct Task /* Descriptor de una tarea */
 
 #define STATUS_END WAIT_SLEEP
 
-/* Agregar nuevos estados como STATUS_END+1, STATUS_END+2, ... */
+/* nShare! */
+#define WAIT_SHARE (STATUS_END+1) /* hizo nRequest y espera nShare  */
+#define WAIT_SHARE_TIMEOUT (STATUS_END+2) /* hizo nRequest y espera nShare y tiene timeout */
+#define WAIT_RELEASE (STATUS_END+3) /* hizo nShare */
 
-#define WAIT_NSHARE STATUS_END+1 
-#define WAIT_NSHARE_TIMEOUT STATUS_END+2
-#define NSHARING STATUS_END+3
+/* Agregar nuevos estados como STATUS_END+1, STATUS_END+2, ... */
 
 #define STATUS_LIST {"READY", "ZOMBIE", "WAIT_TASK", "WAIT_REPLY", \
                      "WAIT_SEND", "WAIT_SEND_TIMEOUT", "WAIT_READ", \
                      "WAIT_WRITE", "WAIT_SEM", "WAIT_MON", "WAIT_COND", \
-                     "WAIT_NSHARE", "WAIT_NSHARE_TIMEOUT", "NSHARING" }
+                     "WAIT_SHARE", "WAIT_SHARE_TIMEOUT", "WAIT_RELEASE" }
 
 /*
  * Prologo y Epilogo:

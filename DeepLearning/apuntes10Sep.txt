@@ -1,0 +1,22 @@
+** REGULARIZACIÓN
+-2 conjuntos ---- ahora 3 
+        train           |   *new dev/validation    |       test
+
+en general es como modificaciones al algoritmo de aprendizaje, pero en vdad son modificaciones
+a mi proceso que no aumentan la capacidad. 
+
+*hoy, alta capacidad y despues regularizo para bajar el error de generalización.
+
+* POR PENALIZACION DE PARAMETROS
+L_reg = 1/N * ( sum(error(y^_i, y^))  + alpha*penalty(o)) --> penalizar la red cuando los pa-
+rámetros son muy grandes
+
+L_2 = penalty  1/2*(sum_1^L (||W^i||²_F + ||U||²_F) )
+
+||A||_f² = A_11² + A_12² + ...... + A_wm²
+
+otra regularicacion
+L_1  me olvido del 1/2 y sumo solo el valor de los pesos.
+
+*Aumento de datos --> crear más datos a partir de los anteriores
+

@@ -376,10 +376,10 @@ static nTask MakeTask(int stack_size)
   /* AMD64 requiere que la pila este alineada a 16 bytes */
   new_task->sp= (SP)( (long)new_task->sp & ~0xfL );
   new_task->queue= NULL;
-  new_task->waiting_msg_queue = MakeFifoQueue();
-  new_task->message=NULL;
-  new_task->timeout=0;
-  new_task->listening=0;
+  //nShare.c
+  new_task->n_request = 0;
+  new_task->share_queue = MakeFifoQueue();
+  new_task->share_msg = NULL;
 
   return new_task;
 }
@@ -479,4 +479,3 @@ int nWaitTask(nTask task)
 
   return rc;
 }
-
